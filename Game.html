@@ -3,7 +3,7 @@
     <title>game</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    <canvas id="gameCanvas" width="1200" height="800"></canvas>
     <script>
         var canvas, canvasContext;
         
@@ -14,10 +14,31 @@
             setInterval(mainloop, 1000/50);
         }
         
+        //player variables
+        var playerXpos = 0;
+        var playerYpos = 0;
+        var playerXspeed = 8;
+        var playerYspeed = 3;
+        var playerSize = 50;
+        
+        var startingPos = true;
 
         function mainloop(){
-            colorRect(0,0,canvas.width,canvas.height,'black'); // bg
-
+            colorRect(0,0,canvas.width,canvas.height,'black'); // Background original
+            colorRect(playerXpos,playerYpos,playerSize,playerSize,'red'); //Player Block
+        
+            startPos();
+            
+        
+         if(startingPos){
+               startPos();
+                startingPos = false;
+            }
+        }
+        
+        function startPos(){
+            playerYpos = canvas.height - playerSize * 9;
+            playerXpos = canvas.width - playerSize * 20;
         }
   
         function colorRect(x,y,w,h,c){
