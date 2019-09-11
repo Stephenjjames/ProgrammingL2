@@ -37,7 +37,6 @@
             colorRect(0,0,canvas.width,canvas.height,'black'); // Background original
             colorRect(playerXpos,playerYpos,playerSize,playerSize,'red'); //Player Block
         
-            startPos();
             playerMove();
         
          if(startingPos){
@@ -71,14 +70,16 @@
         
         function playerMove(){
             //Right movement but stops at right edge
-            if(rightKeyPressed && playerXpos < canvas.width - playerSize){
+            if(rightKeyPressed 
+//               && playerXpos < canvas.width - playerSize
+              ){
                 playerXpos += playerXspeed; // x move
             }
             if(leftKeyPressed){
                 playerXpos -= playerXspeed; // x move
-                if(playerXpos < 0 - playerSize){
-                   playerXpos = canvas.width - playerSize / 2;
-                }
+//                if(playerXpos < 0 - playerSize){
+//                   playerXpos = canvas.width - playerSize / 2;
+//                }
             }
         }
   
