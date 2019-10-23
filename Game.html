@@ -28,24 +28,78 @@
         var playerYspeed = 8;
         var playerSize = 50;
 
+        var enemyXpos = 100;
+        var enemyYpos = 100;
+        var enemyXspeed = 3;
+        var enemyYspeed = 8;
+        const enemySize = 50;
+
+        var enemies = [];
+        var totalEnemies = 10;
+        
+       
+        
+
+        function makeEnemy() {
+
+            var enemyPos = Math.floor(Math.random() * 3) + 1;
+
+            const enemySize = 50;
+            var enemyYpos = Math.floor(Math.random() * (canvas.width - enemySize *2 )) + enemySize * 2;
+            var enemyXpos = canvas.width - enemySize;
+            var enemyXspeed = Math.floor(Math.random()*(10 - 5)) + 5;
+            var enemyYspeed = 8;
+            
+            var enemy = {
+                enemyXpos: enemyXpos,
+                enemyYpos: enemyYpos,
+                enemySize: enemySize,
+                enemyXspeed: enemyXspeed,
+                enemyYspeed: enemyYspeed
+            }
+            
+            enemies.push(enemy);
+        }
+
+
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
         const UP_KEY = 38;
         const DOWN_KEY = 40;
         //This gap in code is for the space key for shooting
+
         var leftKeyPressed = false;
         var rightKeyPressed = false;
         var upKeyPressed = false;
         var downKeyPressed = false;
 
+        var bg = new Image();
+        bg.src = "Images/bg.jpg";
 
         var startingPos = true;
+        var enemyStartingPos = true;
 
         function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'black'); // Background original
+            //            colorRect(0, 0, canvas.width, canvas.height, 'black'); // Background original
+            drawImg(bg, 0, 0, 851, 666, 0, 0, canvas.width, canvas.height); // Background image
             colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red'); //Player Block
+//            colorRect(enemyXpos, enemyYpos, 50, 50, 'black'); //Enemy Block
+
 
             playerMove();
+            enemyMove();
+            
+            drawEnemies();
+
+            if (enemyStartingPos) {
+                enemyStartPos();
+                
+                for(i=0; i < totalEnemies; i++){
+                     makeEnemy();
+                }
+                
+                enemyStartingPos = false;
+            }
 
             if (startingPos) {
                 startPos();
@@ -57,6 +111,13 @@
             playerYpos = canvas.height - playerSize * 9; // Start pos height positioning
             playerXpos = canvas.width - playerSize * 20; // Start pos width positioning
         }
+
+        function enemyStartPos() {
+//            enemyXpos = canvas.width;
+//            enemyYpos = canvas.height - enemySize * 9; // Starting position of enemy
+        }
+        
+
 
         function keyPressed(evt) {
             if (evt.keyCode == LEFT_KEY) {
@@ -105,9 +166,38 @@
             }
         }
 
+        function drawEnemies(){
+            enemies.forEach(function(enemy,i){
+                colorRect(enemy.enemyXpos,enemy.enemyYpos,enemy.enemySize,enemy.enemySize,'black');
+            });
+        }
+        
+        function enemyMove() {
+            enemies.forEach(function(enemy,i){
+
+                enemy.enemyXpos -= enemy.enemyXspeed; //Enemy movement to the left
+                if (enemy.enemyXpos < 0 - enemy.enemySize) {
+                    enemy.enemyXpos = canvas.width - enemy.enemySize / 2; //Move to start at certain point
+                    enemy.enemyYpos = Math.floor(Math.random() * (canvas.height - enemy.enemySize));
+                }
+
+
+                if (enemy.enemyXpos + enemy.enemySize > playerXpos && enemy.enemyXpos < playerXpos + playerSize && enemy.enemyYpos + enemy.enemySize > playerYpos && enemy.enemyYpos < playerYpos + playerSize) {
+                    console.log('hit');
+                    playerXpos = canvas.width - playerSize * 20;
+                    playerYpos = canvas.height - playerSize * 9; // Collision
+                }
+            });
+        }
+
+
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
+        }
+
+        function drawImg(src, sx, sy, sw, sh, dx, dy, dw, dh) {
+            canvasContext.drawImage(src, sx, sy, sw, sh, dx, dy, dw, dh);
         }
 
     </script>
