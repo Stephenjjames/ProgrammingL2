@@ -92,7 +92,7 @@
 
         var shoot = false;
         var shooting = false;
-        
+
 
 
         function mainloop() {
@@ -101,10 +101,12 @@
                 //            colorRect(0, 0, canvas.width, canvas.height, 'black'); // Background original
                 drawImg(bg, 0, 0, 851, 666, 0, 0, canvas.width, canvas.height); // Background image
                 colorRect(playerXpos, playerYpos, playerSize, playerSize, 'red'); //Player Block
-                colorRect(bulletXpos, bulletYpos, bulletSize, bulletSize, 'white'); //Player Block
-                
+                colorRect(bulletXpos, bulletYpos, bulletSize, bulletSize, 'white'); //Bullet
+
                 //            colorRect(enemyXpos, enemyYpos, 50, 50, 'black'); //Enemy Block
-                colorText('score:' + score, 50, 50, '35px Arial', 'white')
+                colorText('Score: ' + score, 50, 50, '35px Arial', 'white')
+                colorText('Deaths: ' + deaths, 950, 50, '35px Arial', 'white')
+                
 
 
                 playerMove();
@@ -122,7 +124,7 @@
                     enemyStartingPos = false;
                 }
 
-                if (deaths >= 1) {
+                if (deaths >= 3) {
                     gameRun = false;
                 }
 
@@ -132,7 +134,7 @@
                 }
             } else {
                 colorRect(0, 0, canvas.width, canvas.height, 'black');
-                colorText('your score was ' + score, 5, canvas.height / 2, '25px Arial', 'white');
+                colorText('Game Over  your score was ' + score, 5, canvas.height / 2, '25px Arial', 'white');
             }
         }
 
@@ -148,20 +150,20 @@
 
         function bulletMove() {
 
-            if(shoot == true && shooting == false){
-                bulletXpos = playerXpos + bulletSize;
+            if (shoot == true && shooting == false) {
+                bulletXpos = playerXpos + playerSize / 2 - bulletSize;
                 bulletYpos = playerYpos + playerSize / 2 - bulletSize / 2;
-    
+
                 shooting = true;
-                
+
             }
-            if(shooting == true){
+            if (shooting == true) {
                 bulletXpos += bulletXspeed;
-                if(bulletXpos > canvas.width){
-                    bulletXpos = 0;
+                if (bulletXpos > canvas.width) {
+                    bulletXpos = 0 - bulletSize;
                     shooting = false;
                     shoot = false;
-                    console.log('moving'+shooting);
+                    console.log('moving' + shooting);
                 }
             }
         }
@@ -198,9 +200,9 @@
             if (evt.keyCode == DOWN_KEY) {
                 downKeyPressed = false;
             }
-//            if (evt.keyCode == SPACE_KEY) {
-//                spaceKeyPressed = false;
-//            }
+            //            if (evt.keyCode == SPACE_KEY) {
+            //                spaceKeyPressed = false;
+            //            }
         }
 
         function playerMove() {
@@ -243,7 +245,14 @@
                     console.log('hit');
                     playerXpos = canvas.width - playerSize * 20;
                     playerYpos = canvas.height - playerSize * 9; // Collision
+                    deaths++
                 }
+
+                if (enemy.enemyXpos + enemy.enemySize > bulletXpos && enemy.enemyXpos < bulletXpos + playerSize && enemy.enemyYpos + enemy.enemySize > bulletYpos && enemy.enemyYpos < bulletYpos + bulletSize) {
+                  enemy.enemyXpos = canvas.width - enemy.enemySize / 2; //Move to start at certain point
+                    enemy.enemyYpos = Math.floor(Math.random() * (canvas.height - enemy.enemySize));
+                    score++
+                } //Bullet collision
             });
         }
 
